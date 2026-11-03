@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-26
+    runs-on: macos-latest
 
     steps:
       - name: Checkout project
@@ -16,6 +16,17 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.14"
+
+      # Install the exact Flutter version required by Flet
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: "3.44.8"
+          cache: true
+
+      - name: Verify Flutter
+        run: flutter --version
 
       - name: Install Flet
         run: |
@@ -34,7 +45,7 @@ jobs:
 
           if [ -z "$APP_PATH" ]; then
             echo "Could not find the compiled iOS app."
-            find build/ipa -maxdepth 5 -print
+            find build/ipa -maxdepth 6 -print
             exit 1
           fi
 
